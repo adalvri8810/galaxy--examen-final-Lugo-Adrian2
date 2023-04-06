@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_CREDS = credentials('docker-credentials')
-        }
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -23,7 +23,15 @@ pipeline {
                 docker { image 'maven:3.6.3-openjdk-11-slim' }
             }
             steps {
-                git branch: 'main', credentialsId: 'git_hub', url: 'https://github.com/aldo2510/galaxy-jenkins-lab-maven.git'
+                def scannerHome = tool 'scanner-default'
+                withSonarQubeEnv('sonar-server') {
+                    sh "${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=labgradle01 \
+                        -Dsonar.projectName=labgradle01 \
+                        -Dsonar.sources=src/main/kotlin \
+                        -Dsonar.java.binaries=target/classes \
+                        -Dsonar.tests=src/test/kotlin"
+                }
             }
          }
 
@@ -50,3 +58,4 @@ pipeline {
         }
     }
 }
+
