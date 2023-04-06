@@ -35,27 +35,5 @@ pipeline {
             }
          }
 
-         stage('Build docker image') {
-            agent any
-            steps {
-                sh 'docker build -t galaxy-examen .'
-            }
-        }
-        stage('Push docker image') {
-            agent any
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable:'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-                    sh 'docker push galaxy-examen'
-                }
-            }
-        }
-        stage('Run Container') {
-            agent any
-            steps {
-                sh 'docker run -d -p 8095:8080 galaxy-examen'
-            }
-        }
     }
 }
-
