@@ -6,22 +6,13 @@ pipeline {
         stages {
             stage('Build') {
                 agent {
-                    docker { image 'gradle:7.5.1-jdk11' }
+                    docker { image 'maven:3.6.3-openjdk-11-slim' }
                 }
                     steps {
                         sh 'gradle build'
                         archiveArtifacts artifacts: 'build/libs/labgradle-*-SNAPSHOT.jar', fingerprint: true
                     }
             }
-/*            stage('Test') {
-                agent {
-                    docker { image 'gradle:7.5.1-jdk11' }
-                }
-                    steps {
-                        sh 'gradle test'
-                        junit 'build/test-results/test/TEST-*.xml'
-                    }
-            }*/
             stage('SonarQube') {
                 steps {
                     script{
