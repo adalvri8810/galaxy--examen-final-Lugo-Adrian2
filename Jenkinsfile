@@ -81,3 +81,6 @@ pipeline {
             }
         }
 }
+
+//plugins
+//Copy ArtifactVersion
